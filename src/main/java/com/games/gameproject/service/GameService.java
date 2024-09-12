@@ -29,8 +29,14 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    public void deleteById(Long id) {
-        gameRepository.deleteById(id);
+    public void deleteById(List<Long> ids) {
+        for (Long id : ids) {
+            gameRepository.deleteById(id);
+        }
+    }
+
+    public void deleteAll() {
+        gameRepository.deleteAll();
     }
 
     public List<Game> findByNameContainingIgnoreCase(String name) {

@@ -42,8 +42,14 @@ public class GameController {
     }
 
     @DeleteMapping("/delete-by-id")
-    public ResponseEntity<Void> deleteById(@RequestParam Long id) {
-        gameService.deleteById(id);
+    public ResponseEntity<List<Long>> deleteById(@RequestBody List<Long> ids) {
+        gameService.deleteById(ids);
+        return ResponseEntity.ok(ids);
+    }
+
+    @DeleteMapping("/delete-all")
+    public ResponseEntity<List<Long>> deleteAll() {
+        gameService.deleteAll();
         return ResponseEntity.noContent().build();
     }
 
