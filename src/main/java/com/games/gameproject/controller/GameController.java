@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.games.gameproject.dto.ResponseDTO;
 import com.games.gameproject.entities.Game;
 import com.games.gameproject.service.GameService;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/api/gamepedia")
 public class GameController {
 
     @Autowired
@@ -26,6 +27,17 @@ public class GameController {
     @GetMapping("/find-all")
     public ResponseEntity<List<Game>> findAll() {
         List<Game> games = gameService.findAll();
+
+        // sort games by name in ascending order and release date in descending order
+        games.sort((game1, game2) -> {
+            int compareName = game1.getName().compareTo(game2.getName());
+            if (compareName != 0) {
+                return compareName;
+            } else {
+                return game2.getReleaseDate().compareTo(game1.getReleaseDate());
+            }
+        });
+
         return ResponseEntity.ok(games);
     }
 
@@ -36,21 +48,29 @@ public class GameController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Game> save(@RequestBody Game game) {
-        Game savedGame = gameService.save(game);
-        return ResponseEntity.ok(savedGame);
+    public ResponseEntity<ResponseDTO> save(@RequestBody Game game) {
+        gameService.save(game);
+        if (game.getId() != null) {
+            return ResponseEntity.ok(new ResponseDTO("Game updated successfully!"));
+        }
+        return ResponseEntity.ok(new ResponseDTO("Game saved successfully!"));
     }
 
     @DeleteMapping("/delete-by-id")
-    public ResponseEntity<List<Long>> deleteById(@RequestBody List<Long> ids) {
+    public ResponseEntity<ResponseDTO> deleteById(@RequestBody List<Long> ids) {
         gameService.deleteById(ids);
-        return ResponseEntity.ok(ids);
+
+        if (ids.size() == 1) {
+            return ResponseEntity.ok(new ResponseDTO("Game deleted successfully!"));
+        } else {
+            return ResponseEntity.ok(new ResponseDTO("Games deleted successfully!"));
+        }
     }
 
     @DeleteMapping("/delete-all")
-    public ResponseEntity<List<Long>> deleteAll() {
+    public ResponseEntity<ResponseDTO> deleteAll() {
         gameService.deleteAll();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ResponseDTO("Games deleted successfully!"));
     }
 
     @GetMapping("/find-by-name")
@@ -90,8 +110,8 @@ public class GameController {
     }
 
     @PostMapping("/populate-database")
-    public ResponseEntity<List<Game>> populateDatabase() {
-        List<Game> games = gameService.populateDatabase();
-        return ResponseEntity.ok(games);
+    public ResponseEntity<ResponseDTO> populateDatabase() {
+        gameService.populateDatabase();
+        return ResponseEntity.ok(new ResponseDTO("Database populated successfully!"));
     }
 }
