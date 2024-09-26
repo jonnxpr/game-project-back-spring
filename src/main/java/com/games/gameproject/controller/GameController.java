@@ -59,10 +59,7 @@ public class GameController {
     @Tag(name = "POST Endpoints")
     public ResponseEntity<ResponseDTO> save(@RequestBody Game game) {
         gameService.save(game);
-        if (game.getId() != null) {
-            return ResponseEntity.ok(new ResponseDTO("Game updated successfully!"));
-        }
-        return ResponseEntity.ok(new ResponseDTO("Game saved successfully!"));
+        return ResponseEntity.ok(new ResponseDTO("Game stored successfully!"));
     }
 
     @Operation(summary = "Delete a game by its ID")
