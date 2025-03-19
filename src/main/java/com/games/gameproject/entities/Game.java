@@ -51,4 +51,5 @@ public class Game {
     @Column(nullable = true, length = 2000, unique = false)
     @Schema(description = "Description of the game", example = "The Legend of Zelda: Breath of the Wild is an action-adventure game developed and published by Nintendo.")
     private String description;
+
 }
