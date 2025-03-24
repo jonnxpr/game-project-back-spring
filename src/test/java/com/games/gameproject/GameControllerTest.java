@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.games.gameproject.constants.MessageConstants;
 import com.games.gameproject.entities.Game;
 
 @SpringBootTest(properties = { "spring.profiles.active=test" })
@@ -98,7 +99,7 @@ public class GameControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(game)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value("Game stored successfully!"));
+				.andExpect(jsonPath("$.message").value(MessageConstants.GAME_SAVED_SUCCESSFULLY));
 	}
 
 	/**
@@ -131,7 +132,7 @@ public class GameControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(Arrays.asList(savedGameId))))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value("Game deleted successfully!"));
+				.andExpect(jsonPath("$.message").value(MessageConstants.GAME_DELETED_SUCCESSFULLY));
 	}
 
 	/**
@@ -141,7 +142,7 @@ public class GameControllerTest {
 	public void testDeleteAll() throws Exception {
 		mockMvc.perform(delete("/api/gamepedia/delete-all"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value("Games deleted successfully!"));
+				.andExpect(jsonPath("$.message").value(MessageConstants.GAMES_DELETED_SUCCESSFULLY));
 	}
 
 	/**
@@ -217,6 +218,6 @@ public class GameControllerTest {
 	public void testPopulateDatabase() throws Exception {
 		mockMvc.perform(post("/api/gamepedia/populate-database"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value("Database populated successfully!"));
+				.andExpect(jsonPath("$.message").value(MessageConstants.DATABASE_POPULATED_SUCCESSFULLY));
 	}
 }

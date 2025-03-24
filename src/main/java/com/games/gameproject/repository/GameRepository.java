@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.games.gameproject.constants.MessageConstants;
 import com.games.gameproject.entities.Game;
 import com.games.gameproject.exception.CustomException;
 
@@ -60,6 +61,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<Game> findByDescriptionContainingIgnoreCase(String description);
 
     default Game findByIdOrThrow(Long id) {
-        return findById(id).orElseThrow(() -> new CustomException("Game not found with id: " + id));
+        return findById(id).orElseThrow(() -> new CustomException(MessageConstants.GAME_NOT_FOUND_WITH_ID + id));
     }
 }
