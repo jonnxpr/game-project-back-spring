@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -18,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.games.gameproject.constants.MessageConstants;
 import com.games.gameproject.entities.Game;
 
 @SpringBootTest(properties = { "spring.profiles.active=test" })
@@ -31,15 +29,11 @@ public class GameControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Autowired
-	private Environment env;
-
 	/**
 	 * Popula o banco de dados com dados de teste antes de cada teste.
 	 */
 	@BeforeEach
 	public void setup() throws Exception {
-		System.out.println("Using database: " + env.getProperty("spring.datasource.url"));
 		mockMvc.perform(post("/api/gamepedia/populate-database"))
 				.andExpect(status().isOk());
 	}
@@ -91,15 +85,12 @@ public class GameControllerTest {
 	 */
 	@Test
 	public void testSave() throws Exception {
-		Game game = new Game();
-		game.setName("Test Game");
-		game.setReleaseDate(new Timestamp(System.currentTimeMillis()));
-
+		Game game = new Game(null, "Test Game", null, null, Timestamp.valueOf("2025-03-26 00:00:00"), null, null);
 		mockMvc.perform(post("/api/gamepedia/save")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(game)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value(MessageConstants.GAME_SAVED_SUCCESSFULLY));
+				.andExpect(jsonPath("$.message").value("Game saved successfully"));
 	}
 
 	/**
@@ -132,7 +123,7 @@ public class GameControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(Arrays.asList(savedGameId))))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value(MessageConstants.GAME_DELETED_SUCCESSFULLY));
+				.andExpect(jsonPath("$.message").value("Games deleted successfully"));
 	}
 
 	/**
@@ -142,7 +133,7 @@ public class GameControllerTest {
 	public void testDeleteAll() throws Exception {
 		mockMvc.perform(delete("/api/gamepedia/delete-all"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value(MessageConstants.GAMES_DELETED_SUCCESSFULLY));
+				.andExpect(jsonPath("$.message").value("All games deleted successfully"));
 	}
 
 	/**
@@ -218,6 +209,6 @@ public class GameControllerTest {
 	public void testPopulateDatabase() throws Exception {
 		mockMvc.perform(post("/api/gamepedia/populate-database"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value(MessageConstants.DATABASE_POPULATED_SUCCESSFULLY));
+				.andExpect(jsonPath("$.message").value("Database populated successfully"));
 	}
 }

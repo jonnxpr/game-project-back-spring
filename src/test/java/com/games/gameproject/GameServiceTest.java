@@ -20,13 +20,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.games.gameproject.entities.Game;
 import com.games.gameproject.repository.GameRepository;
-import com.games.gameproject.service.GameServiceImpl;
+import com.games.gameproject.service.GameService;
 
 @SpringBootTest(properties = { "spring.profiles.active=test" })
 public class GameServiceTest {
 
         @InjectMocks
-        private GameServiceImpl gameService; // Use a implementação concreta
+        private GameService gameService;
 
         @Mock
         private GameRepository gameRepository;
@@ -38,8 +38,9 @@ public class GameServiceTest {
          */
         @BeforeEach
         public void setup() {
-                game = new Game(1L, "Test Game", "Action", "PC", Timestamp.valueOf("2023-01-01 00:00:00"),
-                                "Test Company", "Test Description");
+                game = new Game(1L, "The Legend of Zelda: Breath of the Wild", "Action-adventure",
+                                "Nintendo Switch", Timestamp.valueOf("2023-01-01 00:00:00"), "Nintendo",
+                                "The Legend of Zelda: Breath of the Wild is an action-adventure game developed and published by Nintendo.");
         }
 
         /**

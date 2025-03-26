@@ -1,15 +1,17 @@
 package com.games.gameproject.controller;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.games.gameproject.constants.MessageConstants;
-import com.games.gameproject.dto.ResponseDTO;
 import com.games.gameproject.entities.Game;
 import com.games.gameproject.exception.CustomException;
-import com.games.gameproject.service.GameService;
+import com.games.gameproject.service.IGameService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +34,7 @@ public class GameController {
     private static final Logger logger = LoggerFactory.getLogger(GameController.class);
 
     @Autowired
-    private GameService gameService;
+    private IGameService gameService;
 
     @Operation(summary = "Get a list of all games")
     @GetMapping("/find-all")
@@ -68,49 +69,51 @@ public class GameController {
     @Operation(summary = "Save a game")
     @PostMapping("/save")
     @Tag(name = "POST Endpoints")
-    public ResponseEntity<ResponseDTO> save(@RequestBody Game game) {
+    public ResponseEntity<Map<String, String>> saveGame(@RequestBody Game game) {
         try {
             logger.info("Saving game: {}", game.getName());
             gameService.save(game);
-            return ResponseEntity.ok(new ResponseDTO(MessageConstants.GAME_SAVED_SUCCESSFULLY));
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Game saved successfully");
+            return ResponseEntity.ok(response);
         } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CustomException(MessageConstants.ERROR_SAVING_GAME, e);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @Operation(summary = "Delete a game by its ID")
     @DeleteMapping("/delete-by-id")
     @Tag(name = "DELETE Endpoints")
-    public ResponseEntity<ResponseDTO> deleteById(@RequestBody List<Long> ids) {
+    public ResponseEntity<Map<String, String>> deleteGameById(@RequestBody List<Long> ids) {
         try {
             logger.info("Deleting games with IDs: {}", ids);
             gameService.deleteById(ids);
-            if (ids.size() == 1) {
-                return ResponseEntity.ok(new ResponseDTO(MessageConstants.GAME_DELETED_SUCCESSFULLY));
-            } else {
-                return ResponseEntity.ok(new ResponseDTO(MessageConstants.GAMES_DELETED_SUCCESSFULLY));
-            }
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Games deleted successfully");
+            return ResponseEntity.ok(response);
         } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CustomException(MessageConstants.ERROR_DELETING_ALL_GAMES, e);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @Operation(summary = "Delete all games")
     @DeleteMapping("/delete-all")
     @Tag(name = "DELETE Endpoints")
-    public ResponseEntity<ResponseDTO> deleteAll() {
+    public ResponseEntity<Map<String, String>> deleteAllGames() {
         try {
             logger.info("Deleting all games");
             gameService.deleteAll();
-            return ResponseEntity.ok(new ResponseDTO(MessageConstants.GAMES_DELETED_SUCCESSFULLY));
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "All games deleted successfully");
+            return ResponseEntity.ok(response);
         } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CustomException(MessageConstants.ERROR_DELETING_ALL_GAMES, e);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -207,21 +210,17 @@ public class GameController {
     @Operation(summary = "Populate the database with some games")
     @PostMapping("/populate-database")
     @Tag(name = "POST Endpoints")
-    public ResponseEntity<ResponseDTO> populateDatabase() {
+    public ResponseEntity<Map<String, String>> populateDatabase() {
         try {
             logger.info("Populating database with sample games");
             gameService.populateDatabase();
-            return ResponseEntity.ok(new ResponseDTO(MessageConstants.DATABASE_POPULATED_SUCCESSFULLY));
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Database populated successfully");
+            return ResponseEntity.ok(response);
         } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CustomException(MessageConstants.ERROR_POPULATING_DATABASE, e);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Game> getGameById(@PathVariable Long id) {
-        Game game = gameService.getGameById(id);
-        return ResponseEntity.ok(game);
     }
 }
