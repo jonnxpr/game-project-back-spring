@@ -14,7 +14,6 @@ import io.swagger.v3.oas.models.servers.Server;
 public class OpenAPIConfiguration {
 
     @Bean
-    @SuppressWarnings("unused")
     OpenAPI defineOpenApi() {
         // Configuração do servidor
         Server server = new Server();

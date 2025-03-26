@@ -12,12 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "game")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Represents a game entity")
@@ -51,5 +53,24 @@ public class Game {
     @Column(nullable = true, length = 2000, unique = false)
     @Schema(description = "Description of the game", example = "The Legend of Zelda: Breath of the Wild is an action-adventure game developed and published by Nintendo.")
     private String description;
+
+    public Game(String company, String description, String genre, Long id, String name, String platform,
+            Timestamp releaseDate) {
+        this.company = company;
+        this.description = description;
+        this.genre = genre;
+        this.id = id;
+        this.name = name;
+        this.platform = platform;
+        this.releaseDate = releaseDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Timestamp getReleaseDate() {
+        return releaseDate;
+    }
 
 }

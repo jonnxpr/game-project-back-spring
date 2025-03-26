@@ -29,4 +29,6 @@ public interface GameService {
         List<Game> findByDescriptionContainingIgnoreCase(String description);
 
         void populateDatabase();
+
+        Game getGameById(Long id);
 }

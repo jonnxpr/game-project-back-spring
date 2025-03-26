@@ -1,35 +1,34 @@
 package com.games.gameproject;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.games.gameproject.entities.Game;
 import com.games.gameproject.repository.GameRepository;
-import com.games.gameproject.service.GameService;
+import com.games.gameproject.service.GameServiceImpl;
 
 @SpringBootTest(properties = { "spring.profiles.active=test" })
 public class GameServiceTest {
 
-        @Autowired
-        private GameService gameService;
+        @InjectMocks
+        private GameServiceImpl gameService; // Use a implementação concreta
 
-        @MockBean
+        @Mock
         private GameRepository gameRepository;
 
         private Game game;
